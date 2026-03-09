@@ -45,8 +45,34 @@ def main():
     plt.plot([origin_point[0] , z_pos[0]],[origin_point[1] , z_pos[1]],[origin_point[2] , z_pos[2]], color='blue', linestyle='solid')
     plt.plot([origin_point[0] , z_neg[0]],[origin_point[1] , z_neg[1]],[origin_point[2] , z_neg[2]], color='blue', linestyle='dashed')
 
+
+    p=(4.0,3.0,2.0)
+    print(f"p : {p}")
+    plt.plot(p[0],p[1],p[2], marker='o', color='black')
+
+    translate_vector=(0.0,1.0,1.0)
+    p= translate_point(p,translate_vector[0], translate_vector[1], translate_vector[2])
+    print(f"p : {p}")
+
+    plt.plot(p[0],p[1],p[2], marker='o', color='red')
+
     # Display the 3D plotting window
     plt.show()
+
+def translate_point(point, alpha, beta, gamma):
+    """
+    Input:
+        point (tuple)
+        alpha (int)
+        beta (int)
+        gamma (int)
+    Output:
+        (tuple)
+
+   Function that takes in parameter a point represented by a tuple (x, y, z) and that return a tuple that represents the translated point along vector (alpha,beta,gamma).  
+    """
+    return (point[0]+alpha, point[1]+beta, point[2]+gamma)
+
 
 if __name__ == "__main__":
     main()
