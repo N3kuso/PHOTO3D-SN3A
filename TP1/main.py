@@ -3,7 +3,7 @@ import math
 
 def main():
     # Initialize a new Plotting window
-    plt.figure(figsize=(10, 10))
+    plt.figure(1, figsize=(10, 10))
     # Initializing 3D capabilities
     axes = plt.axes(projection="3d", proj_type='ortho')
     # Setting axis properties
@@ -83,6 +83,31 @@ def main():
     print(f"p_rot : {p_rot}")
     plt.plot(p_rot[0],p_rot[1],p_rot[2], marker='+', color='orange')
 
+    ## Exercice 8
+    # Rotation by all angles
+    p_rot_comp= rot_point_comp(p, math.pi/4, math.pi/4, math.pi/4)
+    print(f"p_rot_comp : {p_rot_comp}")
+    plt.plot(p_rot_comp[0],p_rot_comp[1],p_rot_comp[2], marker='x', color='purple')
+
+    ## Exercice 9
+    # Initialize a new Plotting window
+    plt.figure(2, figsize=(10, 10))
+    # Initializing 3D capabilities
+    axes = plt.axes(projection="3d", proj_type='ortho')
+    # Setting axis properties
+    axes.set_xlim(-10, 10) # X Axis graduation
+    axes.set_ylim(-10, 10) # Y Axis graduation
+    axes.set_zlim(-10, 10) # Z Axis graduation
+    axes.set_xlabel('X') # X Axis label
+    axes.set_ylabel('Y') # Y Axis label
+    axes.set_zlabel('Z') # Z Axis label
+    axes.xaxis.label.set_color('red') # X Axis color
+    axes.yaxis.label.set_color('green') # Y Axis color
+    axes.zaxis.label.set_color('blue') # Z Axis color
+    axes.tick_params(axis='x', colors='red') # X Axis graduation color
+    axes.tick_params(axis='y', colors='green') # Y Axis graduation color
+    axes.tick_params(axis='z', colors='blue') # Z Axis graduation color
+
     # Display the 3D plotting window
     plt.show()
 
@@ -155,6 +180,35 @@ rotated point around X, Y and Z axis by the angles omega, phi, kappa respectivel
     zr = -x*math.sin(phi)+y*math.sin(omega)*math.cos(phi)+z*math.cos(omega)*math.cos(phi)
 
     return xr, yr, zr
+
+def rot_point_comp(point, omega, phi, kappa):
+    """
+    takes in parameter a point represented by a tuple (x, y, z) and returns the tuple (xr, yr, zr) that represents the rotated point around X, Y and Z axis by the angles omega, phi, kappa respectively. 
+    """
+    p = rot_x_point(point, omega)
+    p = rot_y_point(p, phi)
+    p = rot_z_point(p, kappa)
+
+    return p
+
+def cube(size):
+    """
+    Crée un cube de taille 'size' centré à l'origine.
+    Retourne un tableau de 8 sommets dans l'ordre :
+    1:(-s,-s,-s)  2:(s,-s,-s)  3:(-s,s,-s)  4:(s,s,-s)
+    5:(-s,-s,s)   6:(s,-s,s)   7:(-s,s,s)   8:(s,s,s)
+    """
+    s = size
+    return [
+        (-s, -s, -s),  # 1
+        ( s, -s, -s),  # 2
+        (-s,  s, -s),  # 3
+        ( s,  s, -s),  # 4
+        (-s, -s,  s),  # 5
+        ( s, -s,  s),  # 6
+        (-s,  s,  s),  # 7
+        ( s,  s,  s),  # 8
+    ]
 
 if __name__ == "__main__":
     main()
