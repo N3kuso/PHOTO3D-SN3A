@@ -64,18 +64,24 @@ def main():
 
     # Rotation X
     p_rotx=rot_x_point(p, math.pi/4)
-    print(f"p : {p_rotx}")
+    print(f"p_rotx : {p_rotx}")
     plt.plot(p_rotx[0],p_rotx[1],p_rotx[2], marker='o', color='red')
 
     # Rotation Y
     p_roty=rot_y_point(p, math.pi/4)
-    print(f"p : {p_roty}")
+    print(f"p_roty : {p_roty}")
     plt.plot(p_roty[0],p_roty[1],p_roty[2], marker='o', color='green')
 
     # Rotation Z
     p_rotz=rot_z_point(p, math.pi/4)
-    print(f"p : {p_rotz}")
+    print(f"p_rotz : {p_rotz}")
     plt.plot(p_rotz[0],p_rotz[1],p_rotz[2], marker='o', color='blue')
+
+    ## Exercice 7
+    # Rotation by all angles
+    p_rot= rot_point(p, math.pi/4, math.pi/4, math.pi/4)
+    print(f"p_rot : {p_rot}")
+    plt.plot(p_rot[0],p_rot[1],p_rot[2], marker='+', color='orange')
 
     # Display the 3D plotting window
     plt.show()
@@ -135,6 +141,20 @@ axis by an angle kappa.
     zr = z
 
     return (xr,yr,zr)
+
+def rot_point(point, omega, phi, kappa):
+    """
+    that takes in parameter a point 
+represented by a tuple (x, y, z) and returns the tuple (xr, yr, zr) that represents the 
+rotated point around X, Y and Z axis by the angles omega, phi, kappa respectively.
+    """
+    x, y, z = point
+
+    xr = x*math.cos(phi)*math.cos(kappa) + y*(math.sin(omega)*math.sin(phi)*math.sin(kappa)-math.cos(omega)*math.sin(kappa)) + z*(math.cos(omega)*math.sin(phi)*math.cos(kappa)+math.sin(omega)*math.sin(kappa))
+    yr = x*math.cos(phi)*math.sin(kappa)+ y*(math.sin(omega)*math.sin(phi)*math.sin(kappa)+math.cos(omega)*math.cos(kappa)) + z*(math.cos(omega)*math.sin(phi)*math.sin(kappa)-math.sin(omega)*math.cos(kappa))    
+    zr = -x*math.sin(phi)+y*math.sin(omega)*math.cos(phi)+z*math.cos(omega)*math.cos(phi)
+
+    return xr, yr, zr
 
 if __name__ == "__main__":
     main()
