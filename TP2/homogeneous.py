@@ -210,16 +210,53 @@ Result : {result}
     
     return result
 
+def scale_point(point, sx, sy, sz):
+    """
+Funcction that takes in parameter an homegeneous vector that represents a point (x,y,z)
+and returns the homogeneous vector that represents the scaled point along the three axis X, Y 
+and Z axis by factors sx, sy and sz respectively.
+    """
+    S = np.array([
+        [sx, 0, 0, 0],
+        [0, sy, 0, 0],
+        [0, 0, sz, 0],
+        [0, 0,  0, 1]
+    ])
+
+    result = S.dot(point.T)
+
+    print(f""" Function scale_point :
+Scale matrix : {S}
+Point : {point}
+Result : {result}
+            """)
+    return result
+
 ### MAIN ###
 # Exercise 5
+print("""
+######################
+#     EXERCISE 5     #
+######################
+            """)
 v_euclidian = (1.0, 2.0, 3.0)
 v_homogeneous = toHomogeneous(v_euclidian)
 
 # Exercise 6
+print("""
+######################
+#     EXERCISE 6     #
+######################
+            """)
 v_homogeneous_bis=(2.0,4.0,6.0,2.0)
 v_euclidian_bis= toEuclidean(v_homogeneous_bis)
 
 # Exercise 7
+print("""
+######################
+#     EXERCISE 7     #
+######################
+            """)
 point=(4.0,3.0,2.0)
 point=toHomogeneous(point)
 translate_vector=(0.0,1.0,1.0)
@@ -238,6 +275,11 @@ axes.legend()
 plt.show()
 
 # Exercise 8
+print("""
+######################
+#     EXERCISE 8     #
+######################
+            """)
 point=(4.0, 3.0, 2.0)
 point=toHomogeneous(point)
 rotation_angle=np.pi/6
@@ -256,6 +298,11 @@ axes.legend()
 plt.show()
 
 # Exercise 9
+print("""
+######################
+#     EXERCISE 9     #
+######################
+            """)
 point=(4.0, 3.0, 2.0)
 point=toHomogeneous(point)
 rotation_angle=np.pi/7
@@ -274,6 +321,11 @@ axes.legend()
 plt.show()
 
 # Exercise 10
+print("""
+######################
+#     EXERCISE 10    #
+######################
+            """)
 point=(4.0, 3.0, 2.0)
 point=toHomogeneous(point)
 rotation_angle=np.pi/8
@@ -292,6 +344,11 @@ axes.legend()
 plt.show()
 
 # Exercise 11
+print("""
+######################
+#     EXERCISE 11    #
+######################
+            """)
 point=(4.0, 3.0, 2.0)
 point=toHomogeneous(point)
 rotation_angle_vector=(np.pi/6, np.pi/7,np.pi/8) #alpha, beta, gamma
@@ -309,6 +366,29 @@ draw_referential(axes)
 axes.plot(px, py, pz,  marker='o', color='black', markersize=8, label="Original")
 axes.plot(*point_rotated, marker='o', color='red',   markersize=8, label="R(π/6, π/7, π/8)")
 axes.plot(*point_rotated_comp, marker='+', color='orange',   markersize=8, label="Rcomp(π/6, π/7, π/8)")
+axes.legend()
+plt.show()
+
+# Exercise 12
+print("""
+######################
+#     EXERCISE 12    #
+######################
+            """)
+point=(4.0, 3.0, 2.0)
+point=toHomogeneous(point)
+scale_vector=(0.5,1.5,1.0)
+
+point_scaled=toEuclidean(scale_point(point, *scale_vector))
+
+px, py, pz = toEuclidean(point)
+sx, sy, sz = point_scaled
+
+axes = init_3d_axes(title="Exercice 12")
+draw_referential(axes)
+
+axes.plot(px, py, pz,  marker='o', color='black', markersize=8, label="Original")
+axes.plot(*point_scaled, marker='+', color='purple',   markersize=8, label="S(0.5,1.5,1.0)")
 axes.legend()
 plt.show()
 
