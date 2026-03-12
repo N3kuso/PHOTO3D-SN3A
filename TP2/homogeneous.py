@@ -102,8 +102,8 @@ Result : {result}
 
 def rot_x_point(point, omega):
     """
-    Function that takes in parameter the homogeneous representation of a point (x,y,z) 
-    and that return the homogeneous vector resulting of the translation (x,y,z) of along vector (alpha, beta, gamma).
+Function that takes in parameter an homegeneous vector that represents a point (x,y,z)
+and returns the homogeneous vector that represents the rotated point around X axis by an angle omega (expressed in radians).
     """
     c, s = np.cos(omega), np.sin(omega)
     Rx = np.array([
@@ -117,6 +117,29 @@ def rot_x_point(point, omega):
 
     print(f""" Function rot_x_point :
 Rotation matrix : {Rx}
+Point : {point}
+Result : {result}
+            """)
+    
+    return result
+
+def rot_y_point(point, phi):
+    """
+Function that takes in parameter an homegeneous vector that represents a point (x,y,z)
+and returns the homogeneous vector that represents the rotated point around Y axis by an angle phi (expressed in radians).
+    """
+    c, s = np.cos(phi), np.sin(phi)
+    Ry = np.array([
+        [c, 0,  s,  0],
+        [0, 1, 0,  0],
+        [-s, 0, c,  0],
+        [0, 0,  0,  1]
+    ])
+    
+    result = Ry.dot(point.T)
+
+    print(f""" Function rot_y_point :
+Rotation matrix : {Ry}
 Point : {point}
 Result : {result}
             """)
@@ -165,6 +188,24 @@ draw_referential(axes)
 
 axes.plot(px, py, pz,  marker='o', color='black', markersize=8, label="Original")
 axes.plot(*point_rotated, marker='o', color='red',   markersize=8, label="Rx(π/6)")
+axes.legend()
+plt.show()
+
+# Exercise 9
+point=(4.0, 3.0, 2.0)
+point=toHomogeneous(point)
+rotation_angle=np.pi/7
+
+point_rotated=toEuclidean(rot_y_point(point, rotation_angle))
+
+px, py, pz = toEuclidean(point)
+rx, ry, rz = point_rotated
+
+axes = init_3d_axes(title="Exercice 9")
+draw_referential(axes)
+
+axes.plot(px, py, pz,  marker='o', color='black', markersize=8, label="Original")
+axes.plot(*point_rotated, marker='o', color='green',   markersize=8, label="Ry(π/7)")
 axes.legend()
 plt.show()
 
