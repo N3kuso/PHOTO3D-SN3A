@@ -212,7 +212,7 @@ Result : {result}
 
 def scale_point(point, sx, sy, sz):
     """
-Funcction that takes in parameter an homegeneous vector that represents a point (x,y,z)
+Function that takes in parameter an homegeneous vector that represents a point (x,y,z)
 and returns the homogeneous vector that represents the scaled point along the three axis X, Y 
 and Z axis by factors sx, sy and sz respectively.
     """
@@ -231,6 +231,35 @@ Point : {point}
 Result : {result}
             """)
     return result
+
+def create_transform(tx, ty, tz, sx, sy, sz, omega, phi, kappa) -> np.array:
+    """
+    Function that takes in parameter translation parameters tx, ty and tz, scale parameters sx, sy and sz and rotation angles omega, phi and kappa 
+    and that return a 4 x 4 np.array that represent the combined homogeneous transform matrix
+    F = T(tx,ty,tz) @ S(sx,sy,sz) @ Rz(kappa) @ Ry(phi) @ Rx(omega)
+  
+    Input:
+        tx, ty, tz (float): Translation along X, Y, Z.
+        sx, sy, sz (float): Scale factors along X, Y, Z.
+        omega (float)      : Rotation around X axis in radians.
+        phi   (float)      : Rotation around Y axis in radians.
+        kappa (float)      : Rotation around Z axis in radians.
+ 
+    Output:
+        np.array: 4x4 transformation matrix.
+    """
+    co, so = np.cos(omega), np.sin(omega)
+    cp, sp = np.cos(phi),   np.sin(phi)
+    ck, sk = np.cos(kappa), np.sin(kappa)
+ 
+    F = np.array([
+        [sx*ck*cp,  sx*(ck*sp*so - sk*co),  sx*(ck*sp*co + sk*so),  tx],
+        [sy*sk*cp,  sy*(sk*sp*so + ck*co),  sy*(sk*sp*co - ck*so),  ty],
+        [-sz*sp,    sz*cp*so,               sz*cp*co,               tz],
+        [0,         0,                       0,                      1 ]
+    ])
+ 
+    return F
 
 ### MAIN ###
 # Exercise 5
@@ -272,7 +301,7 @@ draw_referential(axes)
 axes.plot(px, py, pz,  marker='o', color='black', markersize=8, label="Original")
 axes.plot(tx, ty, tz, marker='o', color='red',   markersize=8, label="Translated")
 axes.legend()
-plt.show()
+#plt.show()
 
 # Exercise 8
 print("""
@@ -295,7 +324,7 @@ draw_referential(axes)
 axes.plot(px, py, pz,  marker='o', color='black', markersize=8, label="Original")
 axes.plot(*point_rotated, marker='o', color='red',   markersize=8, label="Rx(π/6)")
 axes.legend()
-plt.show()
+#plt.show()
 
 # Exercise 9
 print("""
@@ -318,7 +347,7 @@ draw_referential(axes)
 axes.plot(px, py, pz,  marker='o', color='black', markersize=8, label="Original")
 axes.plot(*point_rotated, marker='o', color='green',   markersize=8, label="Ry(π/7)")
 axes.legend()
-plt.show()
+#plt.show()
 
 # Exercise 10
 print("""
@@ -341,7 +370,7 @@ draw_referential(axes)
 axes.plot(px, py, pz,  marker='o', color='black', markersize=8, label="Original")
 axes.plot(*point_rotated, marker='o', color='blue',   markersize=8, label="Ry(π/8)")
 axes.legend()
-plt.show()
+#plt.show()
 
 # Exercise 11
 print("""
@@ -367,7 +396,7 @@ axes.plot(px, py, pz,  marker='o', color='black', markersize=8, label="Original"
 axes.plot(*point_rotated, marker='o', color='red',   markersize=8, label="R(π/6, π/7, π/8)")
 axes.plot(*point_rotated_comp, marker='+', color='orange',   markersize=8, label="Rcomp(π/6, π/7, π/8)")
 axes.legend()
-plt.show()
+#plt.show()
 
 # Exercise 12
 print("""
@@ -392,4 +421,27 @@ axes.plot(*point_scaled, marker='+', color='purple',   markersize=8, label="S(0.
 axes.legend()
 plt.show()
 
+# Exercise 13
+print("\n" + "#" * 60)
+print("Exercise 13 — create_transform")
+print("#" * 60)
 
+# Pure rotation (tx=ty=tz=0, sx=sy=sz=1)
+F_rot = create_transform(0, 0, 0, 1, 1, 1, np.pi/6, np.pi/7, np.pi/8)
+print("Pure rotation (tx=ty=tz=0, sx=sy=sz=1):")
+print(np.round(F_rot, 4))
+
+# Pure translation (omega=phi=kappa=0, sx=sy=sz=1)
+F_trans = create_transform(1, 2, 3, 1, 1, 1, 0, 0, 0)
+print("\nPure translation (angles=0, sx=sy=sz=1):")
+print(np.round(F_trans, 4))
+
+# Pure scale (omega=phi=kappa=0, tx=ty=tz=0)
+F_scale = create_transform(0, 0, 0, 2, 3, 4, 0, 0, 0)
+print("\nPure scale (angles=0, tx=ty=tz=0):")
+print(np.round(F_scale, 4))
+
+# Rigid body (sx=sy=sz=1)
+F_rigid = create_transform(1, 2, 3, 1, 1, 1, np.pi/6, np.pi/7, np.pi/8)
+print("\nRigid body (sx=sy=sz=1):")
+print(np.round(F_rigid, 4))
