@@ -1,6 +1,50 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
+def init_3d_axes(title="3D Scene"):
+    """Initialise une fenêtre matplotlib 3D avec les paramètres standards."""
+    fig = plt.figure(figsize=(10, 10))
+    fig.suptitle(title, fontsize=14)
+    axes = plt.axes(projection="3d", proj_type='ortho')
+ 
+    axes.set_xlim(-10, 10)
+    axes.set_ylim(-10, 10)
+    axes.set_zlim(-10, 10)
+ 
+    axes.set_xlabel('X')
+    axes.set_ylabel('Y')
+    axes.set_zlabel('Z')
+ 
+    axes.xaxis.label.set_color('red')
+    axes.yaxis.label.set_color('green')
+    axes.zaxis.label.set_color('blue')
+ 
+    axes.tick_params(axis='x', colors='red')
+    axes.tick_params(axis='y', colors='green')
+    axes.tick_params(axis='z', colors='blue')
+ 
+    return axes
+
+def draw_referential(axes):
+    """
+    Dessine le repère 3D avec :
+    - X en rouge, Y en vert, Z en bleu
+    - Partie positive en trait plein, partie négative en tirets
+    """
+    length = 8
+ 
+    # Axe X (rouge)
+    axes.plot([0, length], [0, 0], [0, 0], color='red',   linestyle='solid')
+    axes.plot([0, -length], [0, 0], [0, 0], color='red',  linestyle='dashed')
+ 
+    # Axe Y (vert)
+    axes.plot([0, 0], [0, length], [0, 0], color='green',  linestyle='solid')
+    axes.plot([0, 0], [0, -length], [0, 0], color='green', linestyle='dashed')
+ 
+    # Axe Z (bleu)
+    axes.plot([0, 0], [0, 0], [0, length], color='blue',   linestyle='solid')
+    axes.plot([0, 0], [0, 0], [0, -length], color='blue',  linestyle='dashed')
+
 def toHomogeneous(v: tuple) -> np.array:
     """
     Input:
@@ -56,6 +100,29 @@ Result : {result}
             """)
     return result
 
+def rot_x_point(point, omega):
+    """
+    Function that takes in parameter the homogeneous representation of a point (x,y,z) 
+    and that return the homogeneous vector resulting of the translation (x,y,z) of along vector (alpha, beta, gamma).
+    """
+    c, s = np.cos(omega), np.sin(omega)
+    Rx = np.array([
+        [1,  0,  0,  0],
+        [0,  c, -s,  0],
+        [0,  s,  c,  0],
+        [0,  0,  0,  1]
+    ])
+    
+    result = Rx.dot(point.T)
+
+    print(f""" Function rot_x_point :
+Rotation matrix : {Rx}
+Point : {point}
+Result : {result}
+            """)
+    
+    return result
+
 ### MAIN ###
 # Exercise 5
 v_euclidian = (1.0, 2.0, 3.0)
@@ -71,5 +138,34 @@ point=toHomogeneous(point)
 translate_vector=(0.0,1.0,1.0)
 
 point_translated=toEuclidean(translate_point_hc(point, *translate_vector))
+
+px, py, pz = toEuclidean(point)
+tx, ty, tz = point_translated
+
+axes = init_3d_axes(title="Exercice 7")
+draw_referential(axes)
+
+axes.plot(px, py, pz,  marker='o', color='black', markersize=8, label="Original")
+axes.plot(tx, ty, tz, marker='o', color='red',   markersize=8, label="Translated")
+axes.legend()
+plt.show()
+
+# Exercise 8
+point=(4.0, 3.0, 2.0)
+point=toHomogeneous(point)
+rotation_angle=np.pi/6
+
+point_rotated=toEuclidean(rot_x_point(point, rotation_angle))
+
+px, py, pz = toEuclidean(point)
+rx, ry, rz = point_rotated
+
+axes = init_3d_axes(title="Exercice 8")
+draw_referential(axes)
+
+axes.plot(px, py, pz,  marker='o', color='black', markersize=8, label="Original")
+axes.plot(*point_rotated, marker='o', color='red',   markersize=8, label="Rx(π/6)")
+axes.legend()
+plt.show()
 
 
