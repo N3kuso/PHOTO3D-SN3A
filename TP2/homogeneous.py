@@ -258,8 +258,29 @@ def create_transform(tx, ty, tz, sx, sy, sz, omega, phi, kappa) -> np.array:
         [-sz*sp,    sz*cp*so,               sz*cp*co,               tz],
         [0,         0,                       0,                      1 ]
     ])
- 
+    
     return F
+
+def transform(v: tuple, m) -> np.array:
+    """
+    Function that takes in parameter a tuple v that represents a vector expressed within homogeneous coordinates and
+    a 4 x 4 matrix m that represents an homogeneous transformation and that returns a np.array that represents the transformed vector expressed within homogeneous coordinates.
+ 
+    Input:
+        v (tuple): Vector in homogeneous coordinates.
+        m (np.array): 4x4 homogeneous transformation matrix.
+ 
+    Output:
+        np.array: Transformed vector in homogeneous coordinates.
+    """
+    result = m.dot(np.array(v))
+    print(f""" Function transform :
+Transform matrix : {m}
+Point : {v}
+Result : {result}
+            """)
+    
+    return result
 
 ### MAIN ###
 # Exercise 5
@@ -445,3 +466,44 @@ print(np.round(F_scale, 4))
 F_rigid = create_transform(1, 2, 3, 1, 1, 1, np.pi/6, np.pi/7, np.pi/8)
 print("\nRigid body (sx=sy=sz=1):")
 print(np.round(F_rigid, 4))
+
+# ------------------------------------------------------------------
+# Exercise 14
+# ------------------------------------------------------------------
+print("\n" + "=" * 60)
+print("Exercise 14 — transform")
+print("=" * 60)
+
+# Point
+p = (4.0, 3.0, 2.0)
+p = toHomogeneous(p)
+
+# Case 1: transform == rot_point  (tx=ty=tz=0, sx=sy=sz=1)
+translate_vector = (0,0,0)
+scale_vector = (1,1,1)
+angle_vector = (np.pi/6, np.pi/7, np.pi/8)
+F1   = create_transform(*translate_vector, *scale_vector, *angle_vector)
+tr1  = toEuclidean(transform(tuple(p), F1))
+ref1 = toEuclidean(rot_point(p, *angle_vector))
+print(f"Case 1 — transform (pure rotation) : {np.round(tr1,  6)}")
+print(f"         rot_point             : {np.round(ref1, 6)}")
+
+# Case 2: transform == translate_point_hc  (omega=phi=kappa=0, sx=sy=sz=1)
+translate_vector = (1.0 ,2.0 ,3.0)
+scale_vector = (1,1,1)
+angle_vector = (0,0,0)
+F2   = create_transform(*translate_vector, *scale_vector, *angle_vector)
+tr2  = toEuclidean(transform(tuple(p), F2))
+ref2 = toEuclidean(translate_point_hc(p, *translate_vector))
+print(f"\nCase 2 — transform (pure translation): {np.round(tr2,  6)}")
+print(f"         translate_point_hc     : {np.round(ref2, 6)}")
+
+# Case 3: transform == scale_point  (omega=phi=kappa=0, tx=ty=tz=0)
+translate_vector = (0,0,0)
+scale_vector = (2.0,3.0,4.0)
+angle_vector = (0,0,0)
+F3   = create_transform(*translate_vector, *scale_vector, *angle_vector)
+tr3  = toEuclidean(transform(tuple(p), F3))
+ref3 = toEuclidean(scale_point(p, *scale_vector))
+print(f"\nCase 3 — transform (pure scale): {np.round(tr3,  6)}")
+print(f"         scale_point             : {np.round(ref3, 6)}")
