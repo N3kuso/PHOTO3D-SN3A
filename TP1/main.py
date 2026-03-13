@@ -144,6 +144,21 @@ def main():
     display_cube(axes, translated)
     plt.show()
 
+    # ------------------------------------------------------------------
+    # Exercise 12
+    # ------------------------------------------------------------------
+    print("\n" + "#" * 60)
+    print("Exercise 12 ")
+    print("#" * 60)
+
+    vertices = cube(3.0)
+    rotated = rotate_cube(vertices, np.pi/4, np.pi/3, np.pi/2)
+ 
+    axes = init_3d_axes(title="Exercise 12 - Cube rotation (π/4, π/3, π/2)")
+    draw_referential(axes)
+    display_cube(axes, rotated)
+    plt.show()
+
 def init_3d_axes(title="3D Scene"):
     """Initialize a matplotlib3d windows with the standard parameter"""
     fig = plt.figure(figsize=(10, 10))
@@ -335,6 +350,17 @@ def translate_cube(vertices, alpha, beta, gamma):
     
     return np.array(translated_vertices)
 
+def rotate_cube(vertices, omega, phi, kappa):
+    """
+    Function that takes in parameter an array of tuples that represent the vertices of a cube and three rotation angles omega, phi,
+    kappa and that rotate the cube according to the given angles.
+    """
+    rotated_vertices=[]
+
+    for v in vertices:
+        rotated_vertices.append(rot_point_comp(v, omega, phi, kappa))
+    
+    return np.array(rotated_vertices)
 
 if __name__ == "__main__":
     main()
