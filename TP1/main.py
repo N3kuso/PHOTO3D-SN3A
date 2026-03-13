@@ -159,6 +159,60 @@ def main():
     display_cube(axes, rotated)
     plt.show()
 
+    # ------------------------------------------------------------------
+    # Exercise 13
+    # ------------------------------------------------------------------
+    print("\n" + "#" * 60)
+    print("Exercise 13 ")
+    print("#" * 60)
+    size = 2.0
+    alpha, beta, gamma = 0.25, 0.50, 0.75
+    omega, phi, kappa  = np.pi/6, np.pi/4, np.pi/3
+ 
+    # Cas 1 : Translation -> Rotation
+    v1 = cube(size)
+    v1 = translate_cube(v1, alpha, beta, gamma)
+    v1 = rotate_cube(v1, omega, phi, kappa)
+    axes1 = init_3d_axes(title="Exercise 13 - Cube translation -> Rotation ")
+    draw_referential(axes1)
+    display_cube(axes1, v1)
+    plt.show()
+ 
+    # Cas 2 : Rotation -> Translation
+    v2 = cube(size)
+    v2 = rotate_cube(v2, omega, phi, kappa)
+    v2 = translate_cube(v2, alpha, beta, gamma)
+    axes2 = init_3d_axes(title="Exercise 13 - Cube Rotation -> translation ")
+    draw_referential(axes2)
+    display_cube(axes2, v2)
+    plt.show()
+
+    axes = init_3d_axes(title="Exercice 13 - T∘R vs R∘T")
+    draw_referential(axes)
+ 
+    # Affiche cube 1 (Translation puis Rotation) en magenta
+    for i, v in enumerate(v1):
+        axes.plot(v[0], v[1], v[2], marker='o', color='magenta', markersize=5)
+        
+    # On dessine les arêtes manuellement avec une couleur unique pour différencier
+    def draw_cube_color(axes, verts, color):
+        edges = [(0,1),(2,3),(4,5),(6,7),
+                 (0,2),(1,3),(4,6),(5,7),
+                 (0,4),(1,5),(2,6),(3,7)]
+        for i, j in edges:
+            p1, p2 = verts[i], verts[j]
+            axes.plot([p1[0],p2[0]], [p1[1],p2[1]], [p1[2],p2[2]],
+                      color=color, linewidth=1.5)
+ 
+    draw_cube_color(axes, v1, 'magenta')
+    draw_cube_color(axes, v2, 'cyan')
+ 
+    # Légende manuelle
+    axes.plot([], [], color='magenta', label='T puis R')
+    axes.plot([], [], color='cyan',    label='R puis T')
+    axes.legend()
+    plt.show()
+
 def init_3d_axes(title="3D Scene"):
     """Initialize a matplotlib3d windows with the standard parameter"""
     fig = plt.figure(figsize=(10, 10))
