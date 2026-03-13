@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import math
+import numpy as np
 
 def main():
     # Initialize a new Plotting window
@@ -126,6 +127,21 @@ def main():
     axes = init_3d_axes(title="Exercises 9 & 10 - Cube size 3")
     draw_referential(axes)
     display_cube(axes, vertices)
+    plt.show()
+
+    # ------------------------------------------------------------------
+    # Exercise 11
+    # ------------------------------------------------------------------
+    print("\n" + "#" * 60)
+    print("Exercise 11 ")
+    print("#" * 60)
+
+    vertices = cube(3.0)
+    translated = translate_cube(vertices, 1.0, 2.0, 3.0)
+ 
+    axes = init_3d_axes(title="Exercise 11 - Cube translation (1.0, 2.0, 3.0)")
+    draw_referential(axes)
+    display_cube(axes, translated)
     plt.show()
 
 def init_3d_axes(title="3D Scene"):
@@ -305,7 +321,20 @@ def display_cube(axes, vertices):
     edge(0, 4, 'blue')   
     edge(1, 5, 'blue')   
     edge(2, 6, 'blue')   
-    edge(3, 7, 'blue')   
+    edge(3, 7, 'blue')
+
+def translate_cube(vertices, alpha, beta, gamma):
+    """
+    Function that takes in parameter an array of tuples that represent the vertices of a cube and that return an array of
+    tuples that represent the vertices of the translated cube along vector (alpha, beta, gamma)
+    """
+    translated_vertices=[]
+
+    for v in vertices:
+        translated_vertices.append(translate_point(v, alpha, beta, gamma))
+    
+    return np.array(translated_vertices)
+
 
 if __name__ == "__main__":
     main()
