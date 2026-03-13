@@ -111,6 +111,67 @@ def main():
     # Display the 3D plotting window
     plt.show()
 
+    # ------------------------------------------------------------------
+    # Exercise 10
+    # ------------------------------------------------------------------
+    print("\n" + "#" * 60)
+    print("Exercise 10 ")
+    print("#" * 60)
+
+    vertices = cube(3.0)
+    print(f"  Cube vertices (size 3) :")
+    for i, v in enumerate(vertices):
+        print(f"    Vertices {i+1} : {v}")
+ 
+    axes = init_3d_axes(title="Exercises 9 & 10 - Cube size 3")
+    draw_referential(axes)
+    display_cube(axes, vertices)
+    plt.show()
+
+def init_3d_axes(title="3D Scene"):
+    """Initialize a matplotlib3d windows with the standard parameter"""
+    fig = plt.figure(figsize=(10, 10))
+    fig.suptitle(title, fontsize=14)
+    axes = plt.axes(projection="3d", proj_type='ortho')
+ 
+    axes.set_xlim(-10, 10)
+    axes.set_ylim(-10, 10)
+    axes.set_zlim(-10, 10)
+ 
+    axes.set_xlabel('X')
+    axes.set_ylabel('Y')
+    axes.set_zlabel('Z')
+ 
+    axes.xaxis.label.set_color('red')
+    axes.yaxis.label.set_color('green')
+    axes.zaxis.label.set_color('blue')
+ 
+    axes.tick_params(axis='x', colors='red')
+    axes.tick_params(axis='y', colors='green')
+    axes.tick_params(axis='z', colors='blue')
+ 
+    return axes
+
+def draw_referential(axes):
+    """
+    Draw the 3D referential :
+    - X in red, Y in green, Z in blue
+    - Positive part -> solid, negative part -> dashed
+    """
+    length = 10
+ 
+    # X axis (red)
+    axes.plot([0, length], [0, 0], [0, 0], color='red',   linestyle='solid')
+    axes.plot([0, -length], [0, 0], [0, 0], color='red',  linestyle='dashed')
+ 
+    # Y axis (green)
+    axes.plot([0, 0], [0, length], [0, 0], color='green',  linestyle='solid')
+    axes.plot([0, 0], [0, -length], [0, 0], color='green', linestyle='dashed')
+ 
+    # Z axis (blue)
+    axes.plot([0, 0], [0, 0], [0, length], color='blue',   linestyle='solid')
+    axes.plot([0, 0], [0, 0], [0, -length], color='blue',  linestyle='dashed')
+
 def translate_point(point, alpha, beta, gamma):
     """
     Input:
@@ -193,8 +254,8 @@ def rot_point_comp(point, omega, phi, kappa):
 
 def cube(size):
     """
-    Crée un cube de taille 'size' centré à l'origine.
-    Retourne un tableau de 8 sommets dans l'ordre :
+    Function that takes in parameter a size and create a cube represented by an
+    array of 8 tuples corresponding to its vertices
     1:(-s,-s,-s)  2:(s,-s,-s)  3:(-s,s,-s)  4:(s,s,-s)
     5:(-s,-s,s)   6:(s,-s,s)   7:(-s,s,s)   8:(s,s,s)
     """
@@ -209,6 +270,42 @@ def cube(size):
         (-s,  s,  s),  # 7
         ( s,  s,  s),  # 8
     ]
+
+def display_cube(axes, vertices):
+    """
+    Function that take in parameter an array of tuples that
+    represent the vertices of a cube and that display the cube within the 3D environment. 
+    Each edge of the cube is colorized with the same color as its parallel axis :
+    - Red    : parallel to X
+    - Green  : parallel to Y
+    - Blue   : parallel to Z
+ 
+    
+    0:(-s,-s,-s)  1:(s,-s,-s)  2:(-s,s,-s)  3:(s,s,-s)
+    4:(-s,-s,s)   5:(s,-s,s)   6:(-s,s,s)   7:(s,s,s)
+    """
+    def edge(i, j, color):
+        p1, p2 = vertices[i], vertices[j]
+        axes.plot([p1[0], p2[0]], [p1[1], p2[1]], [p1[2], p2[2]],
+                  color=color, linestyle='solid', linewidth=1.5)
+ 
+    # Edges parallels to X (red)
+    edge(0, 1, 'red')   
+    edge(2, 3, 'red')   
+    edge(4, 5, 'red')   
+    edge(6, 7, 'red')   
+ 
+    # Edges parallels to Y (green)
+    edge(0, 2, 'green')  
+    edge(1, 3, 'green')  
+    edge(4, 6, 'green')  
+    edge(5, 7, 'green')  
+ 
+    # Edges parallels to Z (blue)
+    edge(0, 4, 'blue')   
+    edge(1, 5, 'blue')   
+    edge(2, 6, 'blue')   
+    edge(3, 7, 'blue')   
 
 if __name__ == "__main__":
     main()
